@@ -1,7 +1,9 @@
 package main
 
 import (
+	"auth/controllers"
 	"auth/initializers"
+	"auth/middleware"
 	"github.com/gin-gonic/gin"
 )
 
@@ -13,10 +15,12 @@ func init() {
 func main() {
 
 	r := gin.Default()
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
-	r.Run() // listen and serve on 0.0.0.0:8080
+	r.POST("/signup", controllers.Signup)
+	r.POST("/login", controllers.Login)
+	r.GET("/validate", middleware.RequireAuth, controllers.Validate)
+	err := r.Run()
+
+	if err != nil {
+		return
+	} // listen and serve on 0.0.0.0:8080
 }
