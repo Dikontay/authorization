@@ -1,8 +1,10 @@
-package initializers
+package pkg
 
 import (
+	"auth/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"log"
 	"os"
 )
 
@@ -16,4 +18,12 @@ func ConnectToDB() {
 		panic("failed to connect to db")
 	}
 
+}
+
+func SyncDatabase() {
+	err := DB.AutoMigrate(&models.User{}, &models.Role{})
+	if err != nil {
+		log.Printf("Migration db error %e", err)
+		//os.Exit(1)
+	}
 }
